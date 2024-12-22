@@ -1,0 +1,164 @@
+import 'package:communityapp/controllers/profile_controller.dart';
+import 'package:communityapp/models/profile_model.dart';
+import 'package:communityapp/views/profile/profile_view.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class InputPage extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController github = TextEditingController();
+  TextEditingController linkedin = TextEditingController();
+  ProfileController controller = Get.put(ProfileController());
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('User Information'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    // Name Input
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                      controller: name,
+                    ),
+
+                    SizedBox(height: 16),
+
+                    // Email Input
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                      controller: email,
+                    ),
+
+                    SizedBox(height: 16),
+
+                    // Phone Input
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Phone',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+
+                        return null;
+                      },
+                      controller: phone,
+                    ),
+
+                    SizedBox(height: 16),
+
+                    // GitHub Input
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'GitHub',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your GitHub profile link';
+                        }
+                        return null;
+                      },
+                      controller: github,
+                    ),
+
+                    SizedBox(height: 16),
+
+                    // LinkedIn Input
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'LinkedIn',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your LinkedIn profile link';
+                        }
+                        return null;
+                      },
+                      controller: linkedin,
+                    ),
+
+                    SizedBox(height: 24),
+
+                    // Submit Button
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Form submitted successfully!')),
+                          );
+                          final user = ProfileModel(
+                              name: name.text.trim(),
+                              phone: phone.text.trim(),
+                              email: email.text.trim(),
+                              github: github.text.trim(),
+                              linkedin: linkedin.text.trim());
+                          controller.createUser(user);
+                          print('Hello');
+                          Get.to(MyProfilePage());
+                        }
+                      },
+                      child: Text('Submit'),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Save Button at the Bottom
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Data saved successfully!')),
+                    );
+                  }
+                },
+                child: Text('Save'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
